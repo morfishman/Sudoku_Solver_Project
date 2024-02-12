@@ -7,24 +7,7 @@ namespace SudokuSolver.IOUtilities
 {
     public class ConsoleInputProvider : IInputProvider<string>
     {
-        private static ConsoleInputProvider instance;
-        private ConsoleInputProvider() { }
-
-        /// <summary>
-        /// singletone implimintation
-        /// </summary>
-        /// <returns> A object of ConsoleInputProvider</returns>
-        public static ConsoleInputProvider Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new ConsoleInputProvider();
-                }
-                return instance;
-            }
-        }
+        public ConsoleInputProvider() { }
 
         /// <summary>
         /// Reads a line of characters from the standard input stream.
@@ -37,16 +20,5 @@ namespace SudokuSolver.IOUtilities
         {
             return Console.ReadLine();
         }
-
-        /// <summary>
-        /// Test the class 
-        /// </summary>
-        /// <param name="args"></param>
-        //static void Main(string[] args)
-        //{
-        //    Console.WriteLine("Enter your name:");
-        //    string name = ConsoleInputProvider.Instance.ReadInput();
-        //    Console.WriteLine($"Hello, {name}!");
-        //}
     }
 }
