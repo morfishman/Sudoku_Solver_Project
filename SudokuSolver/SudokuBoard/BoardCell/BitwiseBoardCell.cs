@@ -9,6 +9,7 @@ namespace SudokuSolver.SudokuBoard.BoardCell
         private byte[] Options; 
         private bool Permint;
         private int Current_Value;
+        private int Options_Amount;
 
 
         /// <summary>
@@ -30,12 +31,14 @@ namespace SudokuSolver.SudokuBoard.BoardCell
 
             int numBytes = (numOptions + 7) / 8;
             this.Options = new byte[numBytes];
+            this.Options_Amount = 0;
 
             if (!Permint)
             {
                 for (int i = 0; i < numOptions; i++)
                 {
                     Retrive_Option(i);
+                    this.Options_Amount++;
                 }
             }
         }
@@ -45,14 +48,24 @@ namespace SudokuSolver.SudokuBoard.BoardCell
         /// Sets to 1 the specified option in the Options byte array.
         /// </summary>
         /// <param name="Option">The option to set.</param>
-        public void Retrive_Option(int Option)
+        /// <returns>status code if added</returns>
+        public bool Retrive_Option(int Option)
         {
             Option -= 1;
+            bool return_flag = true;
             int byteIndex = Option / 8; 
             int bitIndex = Option % 8;
-
-            byte mask = (byte)(1 << bitIndex); 
-            Options[byteIndex] |= mask; 
+            byte mask = (byte)(1 << bitIndex);
+            if((Options[byteIndex] & mask) != 0)
+            {
+                return_flag = false;
+            }
+            else
+            {
+                Options[byteIndex] |= mask;
+                this.Options_Amount++;
+            }
+            return return_flag;
         }
 
 
@@ -86,15 +99,27 @@ namespace SudokuSolver.SudokuBoard.BoardCell
         /// Removes the specified option.
         /// </summary>
         /// <param name="Option">The option to remove.</param>
+        /// <returns>status code if Removed</returns>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the specified option index is negative or zero.</exception>
-        public void Remove_Option(int Option)
+        public bool Remove_Option(int Option)
         {
             Option -= 1;
+            bool return_flag = true;
             int byteIndex = Option / 8;
             int bitIndex = Option % 8;
 
             byte mask = (byte)~(1 << bitIndex);
-            Options[byteIndex] &= mask;
+
+            if ((Options[byteIndex] & mask) == 0)
+            {
+                return_flag = false;
+            }
+            else
+            {
+                Options[byteIndex] &= mask;
+                this.Options_Amount--;
+            }
+            return return_flag;
         }
 
         /// <summary>
@@ -114,6 +139,16 @@ namespace SudokuSolver.SudokuBoard.BoardCell
         public bool Is_Permint()
         {
             return this.Permint;
+        }
+
+
+        /// <summary>
+        /// Gets the amount of options in each cell.
+        /// </summary>
+        /// <returns>True if the cell changable, otherwise false.</returns>
+        public int Count_Options()
+        {
+            return this.Options_Amount;
         }
 
 
