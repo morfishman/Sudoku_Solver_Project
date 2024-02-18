@@ -151,6 +151,10 @@ namespace SudokuSolver.SudokuBoard.BoardCell
             return this.Options_Amount;
         }
 
+        public int Get_Current_Value()
+        {
+            return this.Current_Value;
+        }
 
     }
 }
