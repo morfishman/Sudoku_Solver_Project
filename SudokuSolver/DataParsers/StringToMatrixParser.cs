@@ -40,7 +40,7 @@ namespace SudokuSolver.DataParsers
                     {
                         throw new ArgumentException(String.Format("not valid number in board {0}", number));
                     }
-                    bool permint = (number != 0) ? true : false;
+                    bool permint = (number != IBoardCell.BOARD_CELL_EMPTY) ? true : false;
                     boardCells[i][j] = new BitwiseBoardCell(number, permint, sudoku_size);
                 }
             }
