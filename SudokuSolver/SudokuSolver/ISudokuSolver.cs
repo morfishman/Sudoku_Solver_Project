@@ -6,7 +6,7 @@ namespace SudokuSolver.SudokuSolver
 {
     public interface ISudokuSolver
     {
-        void Solve();
+        bool Solve();
         string ToString();
     }
 }
