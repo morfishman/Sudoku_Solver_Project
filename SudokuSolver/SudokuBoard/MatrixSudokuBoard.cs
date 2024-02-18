@@ -51,5 +51,7 @@ namespace SudokuSolver.SudokuBoard
         {
             return SudokuBoard[row][col];
         }
+
+
     }
 }
