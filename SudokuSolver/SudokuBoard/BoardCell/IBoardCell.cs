@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SudokuSolver.SudokuBoard
+namespace SudokuSolver.SudokuBoard.BoardCell
 {
-    public interface BoardCell
+    public interface IBoardCell
     {
         bool Is_Option_Exists(int Option);
         void Remove_Option(int Option);

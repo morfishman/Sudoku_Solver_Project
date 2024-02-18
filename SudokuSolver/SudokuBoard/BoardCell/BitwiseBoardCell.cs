@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SudokuSolver.SudokuBoard
+namespace SudokuSolver.SudokuBoard.BoardCell
 {
-    public class BitwiseBoardCell: BoardCell
+    public class BitwiseBoardCell: IBoardCell
     {
         private byte[] Options; 
         private bool Permint;
