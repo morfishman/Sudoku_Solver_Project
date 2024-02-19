@@ -9,5 +9,10 @@ namespace SudokuSolver.SudokuRelations.StandardSudokuRelations
         HashSet<(int, int)> GetRowRelations(int row, int col);
         HashSet<(int, int)> GetColumnRelations(int row, int col);
         HashSet<(int, int)> GetBoxRelations(int row, int col);
+        HashSet<(int, int)> GetOnlyColumnRelations(int col);
+        HashSet<(int, int)> GetOnlyRowRelations(int row);
+        HashSet<(int, int)> GetOnlyBoxRelations(int boxIndex);
+
+
     }
 }
