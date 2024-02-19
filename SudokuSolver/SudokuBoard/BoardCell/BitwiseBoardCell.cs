@@ -6,38 +6,38 @@ namespace SudokuSolver.SudokuBoard.BoardCell
 {
     public class BitwiseBoardCell: IBoardCell
     {
-        private byte[] Options; 
-        private bool Permint;
-        private int Current_Value;
-        private int Options_Amount;
+        private byte[] options; 
+        private bool permint;
+        private int currentValue;
+        private int optionsAmount;
 
 
         /// <summary>
         /// Initializes a new instance of the BitwiseBoardCell class.
         /// </summary>
-        /// <param name="Current_Value">The current value.</param>
-        /// <param name="Permint">is it changeble</param>
+        /// <param name="currentValue">The current value.</param>
+        /// <param name="permint">is it changeble</param>
         /// <param name="numOptions">The number of options.</param>
         /// <exception cref="ArgumentException">Thrown when the number of options is less than or equal to zero.</exception>
-        public BitwiseBoardCell(int Current_Value, bool Permint, int numOptions)
+        public BitwiseBoardCell(int currentValue, bool permint, int numOptions)
         {
             if (numOptions <= 0)
             {
                 throw new ArgumentException("Number of options must be greater than zero.");
             }
 
-            this.Permint = Permint;
-            this.Current_Value = Current_Value;
+            this.permint = permint;
+            this.currentValue = currentValue;
 
             int numBytes = (numOptions + 7) / 8;
-            this.Options = new byte[numBytes];
-            this.Options_Amount = 0;
+            this.options = new byte[numBytes];
+            this.optionsAmount = 0;
 
-            if (!Permint)
+            if (!permint)
             {
                 for (int i = 1; i <= numOptions; i++)
                 {
-                    Retrive_Option(i);
+                    RetriveOption(i);
                 }
             }
         }
@@ -46,89 +46,89 @@ namespace SudokuSolver.SudokuBoard.BoardCell
         /// <summary>
         /// Sets to 1 the specified option in the Options byte array.
         /// </summary>
-        /// <param name="Option">The option to set.</param>
+        /// <param name="option">The option to set.</param>
         /// <returns>status code if added</returns>
-        public bool Retrive_Option(int Option)
+        public bool RetriveOption(int option)
         {
-            Option -= 1;
-            bool return_flag = true;
-            int byteIndex = Option / 8; 
-            int bitIndex = Option % 8;
+            option -= 1;
+            bool returnFlag = true;
+            int byteIndex = option / 8; 
+            int bitIndex = option % 8;
             byte mask = (byte)(1 << bitIndex);
-            if((Options[byteIndex] & mask) != 0)
+            if((options[byteIndex] & mask) != 0)
             {
-                return_flag = false;
+                returnFlag = false;
             }
             else
             {
-                Options[byteIndex] |= mask;
-                this.Options_Amount++;
+                options[byteIndex] |= mask;
+                this.optionsAmount++;
             }
-            return return_flag;
+            return returnFlag;
         }
 
 
         /// <summary>
         /// Checks if the specified option exists.
         /// </summary>
-        /// <param name="Option">The option to check.</param>
+        /// <param name="option">The option to check.</param>
         /// <returns>True if the option exists, otherwise false.</returns>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the specified option is negative or zero.</exception>
-        public bool Is_Option_Exists(int Option)
+        public bool IsOptionExists(int option)
         {
-            if (Option <= 0)
+            if (option <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(Option), "Option must be non-negative.");
+                throw new ArgumentOutOfRangeException(nameof(option), "Option must be non-negative.");
             }
-            Option -= 1;
-            int byteIndex = Option / 8;
-            int bitIndex = Option % 8;
+            option -= 1;
+            int byteIndex = option / 8;
+            int bitIndex = option % 8;
 
-            if (byteIndex >= Options.Length)
+            if (byteIndex >= options.Length)
             {
                 return false; 
             }
 
             byte mask = (byte)(1 << bitIndex);
-            return (Options[byteIndex] & mask) != 0;
+            return (options[byteIndex] & mask) != 0;
         }
 
 
         /// <summary>
         /// Removes the specified option.
         /// </summary>
-        /// <param name="Option">The option to remove.</param>
+        /// <param name="option">The option to remove.</param>
         /// <returns>status code if Removed</returns>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the specified option index is negative or zero.</exception>
-        public bool Remove_Option(int Option)
+        public bool RemoveOption(int option)
         {
-            Option -= 1;
-            bool return_flag = true;
-            int byteIndex = Option / 8;
-            int bitIndex = Option % 8;
+            option -= 1;
+            bool returnFlag = true;
+            int byteIndex = option / 8;
+            int bitIndex = option % 8;
 
             byte mask = (byte)(1 << bitIndex);
 
-            if ((Options[byteIndex] & mask) == 0)
+            if ((options[byteIndex] & mask) == 0)
             {
-                return_flag = false;
+                returnFlag = false;
             }
             else
             {
                 mask = (byte)~mask;
-                Options[byteIndex] &= mask;
-                this.Options_Amount--;
+                options[byteIndex] &= mask;
+                this.optionsAmount--;
             }
-            return return_flag;
+            return returnFlag;
         }
 
         /// <summary>
         /// Sets the current value of the cell.
         /// </summary>
-        /// <param name="Value">The new value to set.</param>
-        public void Set_Current_Value(int Value)
+        /// <param name="value">The new value to set.</param>
+        public void SetCurrentValue(int value)
         {
-            this.Current_Value = Value;
+            this.currentValue = value;
         }
 
 
@@ -136,9 +136,9 @@ namespace SudokuSolver.SudokuBoard.BoardCell
         /// Gets the status of the cell.
         /// </summary>
         /// <returns>True if the cell changable, otherwise false.</returns>
-        public bool Is_Permint()
+        public bool IsPermint()
         {
-            return this.Permint;
+            return this.permint;
         }
 
 
@@ -146,34 +146,34 @@ namespace SudokuSolver.SudokuBoard.BoardCell
         /// Gets the amount of options in each cell.
         /// </summary>
         /// <returns>True if the cell changable, otherwise false.</returns>
-        public int Count_Options()
+        public int CountOptions()
         {
-            return this.Options_Amount;
+            return this.optionsAmount;
         }
 
-        public int Get_Current_Value()
+        public int GetCurrentValue()
         {
-            return this.Current_Value;
+            return this.currentValue;
         }
 
 
 
-        public byte[] Get_Options()
+        public byte[] GetOptions()
         {
-            return this.Options;
+            return this.options;
         }
 
-        public void Remove_Options(byte[] Options)
+        public void RemoveOptions(byte[] options)
         {
-            this.Options_Amount = 0;
-            for (int i = 0; i < Options.Length; i++)
+            this.optionsAmount = 0;
+            for (int i = 0; i < options.Length; i++)
             {
-                this.Options[i] &= (byte)~Options[i];
+                this.options[i] &= (byte)~options[i];
                 for (int j = 0; j < 8; j++)
                 {
-                    if (((this.Options[i] >> j) & 1) == 1)
+                    if (((this.options[i] >> j) & 1) == 1)
                     {
-                        this.Options_Amount++;
+                        this.optionsAmount++;
                     }
                 }
             }
@@ -182,17 +182,17 @@ namespace SudokuSolver.SudokuBoard.BoardCell
 
         }
 
-        public void Set_Options(byte[] Options)
+        public void SetOptions(byte[] options)
         {
-            this.Options_Amount = 0;
-            for (int i = 0; i < Options.Length; i++)
+            this.optionsAmount = 0;
+            for (int i = 0; i < options.Length; i++)
             {
-                this.Options[i] = Options[i];
+                this.options[i] = options[i];
                 for (int j = 0; j < 8; j++)
                 {
-                    if (((this.Options[i] >> j) & 1) == 1)
+                    if (((this.options[i] >> j) & 1) == 1)
                     {
-                        this.Options_Amount++;
+                        this.optionsAmount++;
                     }
                 }
             }
