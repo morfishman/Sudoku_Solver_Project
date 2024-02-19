@@ -363,4 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 /SudokuSolver.UnitTests/SudokuSolver.UnitTests.csproj
 /SudokuSolver.sln
-/SudokuSolver
+
+/SudokuSolver/SudokuSolver.csproj
