@@ -3,7 +3,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using SudokuSolver.IOUtilities.Output;
 
-namespace SudokuSolver.UnitTests.IOUtilities
+
+namespace SudokuSolver.UnitTests
 {
     [TestClass]
     public class OutputProvidersTests
