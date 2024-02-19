@@ -176,6 +176,21 @@ namespace SudokuSolver.SudokuRelations.StandardSudokuRelations
             return allRelationsByIndex[(row, col)];
         }
 
+        public HashSet<(int, int)> GetOnlyColumnRelations(int col)
+        {
+            return this.colRelations[col];
+        }
+
+        public HashSet<(int, int)> GetOnlyRowRelations(int row)
+        {
+            return this.rowRelations[row];
+        }
+
+        public HashSet<(int, int)> GetOnlyBoxRelations(int boxIndex)
+        {
+            return this.boxRelations[boxIndex];
+        }
+
         /// <summary>
         /// Main method to test the StandardSudokuRelationsRunTime class.
         /// </summary>
@@ -192,6 +207,7 @@ namespace SudokuSolver.SudokuRelations.StandardSudokuRelations
         //    Console.WriteLine($"Column relations for cell ({row},{col}): {string.Join(", ", sudokuRelations.GetColumnRelations(row, col))}");
         //    Console.WriteLine($"Box relations for cell ({row},{col}): {string.Join(", ", sudokuRelations.GetBoxRelations(row, col))}");
         //    Console.WriteLine($"All relations for cell ({row},{col}): {string.Join(", ", sudokuRelations.GetAllRelations(row, col))}");
+        //    Console.WriteLine($"All relations for box: {string.Join(", ", sudokuRelations.GetOnlyBoxRelations(2))}");
 
         //    stopwatch.Stop();
         //    Console.WriteLine($"Elapsed time: {stopwatch.Elapsed}");
