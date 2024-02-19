@@ -10,10 +10,6 @@ namespace SudokuSolver.IOUtilities.Input
     {
         private string filePath;
         private bool isSet;
-        /// <summary>
-        /// Update the 'filePath' property
-        /// </summary>
-        /// <exception cref="System.ArgumentException">if File path is null or empty</exception>
         
 
         /// <summary>
