@@ -14,5 +14,8 @@ namespace SudokuSolver.SudokuBoard.BoardCell
         bool Is_Permint();
         int Count_Options();
         int Get_Current_Value();
+        byte[] Get_Options();
+        void Remove_Options(byte[] Options);
+        void Set_Options(byte[] Options);
     }
 }
