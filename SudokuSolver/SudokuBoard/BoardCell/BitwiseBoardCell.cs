@@ -35,10 +35,9 @@ namespace SudokuSolver.SudokuBoard.BoardCell
 
             if (!Permint)
             {
-                for (int i = 0; i < numOptions; i++)
+                for (int i = 1; i <= numOptions; i++)
                 {
                     Retrive_Option(i);
-                    this.Options_Amount++;
                 }
             }
         }
@@ -108,7 +107,7 @@ namespace SudokuSolver.SudokuBoard.BoardCell
             int byteIndex = Option / 8;
             int bitIndex = Option % 8;
 
-            byte mask = (byte)~(1 << bitIndex);
+            byte mask = (byte)(1 << bitIndex);
 
             if ((Options[byteIndex] & mask) == 0)
             {
@@ -116,6 +115,7 @@ namespace SudokuSolver.SudokuBoard.BoardCell
             }
             else
             {
+                mask = (byte)~mask;
                 Options[byteIndex] &= mask;
                 this.Options_Amount--;
             }
@@ -151,6 +151,51 @@ namespace SudokuSolver.SudokuBoard.BoardCell
             return this.Options_Amount;
         }
 
+        public int Get_Current_Value()
+        {
+            return this.Current_Value;
+        }
 
+
+
+        public byte[] Get_Options()
+        {
+            return this.Options;
+        }
+
+        public void Remove_Options(byte[] Options)
+        {
+            this.Options_Amount = 0;
+            for (int i = 0; i < Options.Length; i++)
+            {
+                this.Options[i] &= (byte)~Options[i];
+                for (int j = 0; j < 8; j++)
+                {
+                    if (((this.Options[i] >> j) & 1) == 1)
+                    {
+                        this.Options_Amount++;
+                    }
+                }
+            }
+            
+          
+
+        }
+
+        public void Set_Options(byte[] Options)
+        {
+            this.Options_Amount = 0;
+            for (int i = 0; i < Options.Length; i++)
+            {
+                this.Options[i] = Options[i];
+                for (int j = 0; j < 8; j++)
+                {
+                    if (((this.Options[i] >> j) & 1) == 1)
+                    {
+                        this.Options_Amount++;
+                    }
+                }
+            }
+        }
     }
 }
