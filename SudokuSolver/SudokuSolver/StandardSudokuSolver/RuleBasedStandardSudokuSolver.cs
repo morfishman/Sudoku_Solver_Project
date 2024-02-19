@@ -131,7 +131,7 @@ namespace SudokuSolver.SudokuSolver.StandardSudokuSolver
                 // optimal naked pattern
                 for (int i = 0; i < this.boardArg; i++)
                 {
-                    HashSet<(int, int)> collom = this.relations.GetOnlyColumnRelations(i);
+                    HashSet<(int, int)> collom = this.relations.GetOnlyCollomRelations(i);
                     HashSet<(int, int)> row = this.relations.GetOnlyRowRelations(i);
                     HashSet<(int, int)> box = this.relations.GetOnlyBoxRelations(i);
                     Dictionary<byte[], List<(int, int)>> collomFinds = NakedPatternFinder(collom);

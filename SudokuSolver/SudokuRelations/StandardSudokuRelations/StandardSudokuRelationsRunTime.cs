@@ -176,7 +176,7 @@ namespace SudokuSolver.SudokuRelations.StandardSudokuRelations
             return allRelationsByIndex[(row, col)];
         }
 
-        public HashSet<(int, int)> GetOnlyColumnRelations(int col)
+        public HashSet<(int, int)> GetOnlyCollomRelations(int col)
         {
             return this.colRelations[col];
         }
