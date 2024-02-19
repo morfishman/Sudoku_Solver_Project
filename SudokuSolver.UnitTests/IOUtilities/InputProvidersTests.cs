@@ -5,7 +5,7 @@ using System.IO;
 namespace SudokuSolver.UnitTests.IOUtilities
 {
     [TestClass]
-    public class ConsoleInputProviderTests
+    public class InputProvidersTests
     {
         [TestMethod]
         public void CarReadFromConsole_NothingWrote_ReturnsEmptyString()
