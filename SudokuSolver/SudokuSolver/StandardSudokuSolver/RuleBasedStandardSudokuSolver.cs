@@ -15,10 +15,10 @@ namespace SudokuSolver.SudokuSolver.StandardSudokuSolver
 {
     public class RuleBasedStandardSudokuSolver: IStandardSudokuSolver
     {
-        private IStandardSudokuRelations Relations;
-        private ISudokuBoard Board;
-        private Dictionary<int,List<(int, int)>> MinimumList;
-        private int BoardArg;
+        private IStandardSudokuRelations relations;
+        private ISudokuBoard board;
+        private Dictionary<int,List<(int, int)>> minimumList;
+        private int boardArg;
         private int emptyCells;
         private int statusSolver;
 
@@ -27,41 +27,41 @@ namespace SudokuSolver.SudokuSolver.StandardSudokuSolver
         public RuleBasedStandardSudokuSolver(IStandardSudokuRelations relations, ISudokuBoard board)
         {
            
-            statusSolver = - (board.Board_Size()/2);
+            statusSolver = - (board.BoardSize()/2);
             this.emptyCells = 0;
-            this.Board = board;
-            this.Relations = relations;
-            this.BoardArg = board.Board_Size();
-            if (!is_sudoku_valid())
+            this.board = board;
+            this.relations = relations;
+            this.boardArg = board.BoardSize();
+            if (!IsSudokuValid())
             {
                 throw new ArgumentException("sudoku is not valid");
             }
-            this.MinimumList = new Dictionary<int,List<(int, int)>>(this.BoardArg+1);
-            for (int optionCounter = 0; optionCounter <= this.BoardArg; optionCounter++)
+            this.minimumList = new Dictionary<int,List<(int, int)>>(this.boardArg+1);
+            for (int optionCounter = 0; optionCounter <= this.boardArg; optionCounter++)
             {
-                this.MinimumList.Add(optionCounter, new List<(int, int)>(this.BoardArg*this.BoardArg));
+                this.minimumList.Add(optionCounter, new List<(int, int)>(this.boardArg*this.boardArg));
             }
-            for (int row = 0; row < this.BoardArg; row++)
+            for (int row = 0; row < this.boardArg; row++)
             {
-                for (int col = 0; col < this.BoardArg; col++)
+                for (int col = 0; col < this.boardArg; col++)
                 {
-                    IBoardCell tempCell = this.Board.Get_Cell_By_Index(row, col);
-                    int optionCount = (tempCell.Is_Permint())?0: this.BoardArg;
+                    IBoardCell tempCell = this.board.GetCellByIndex(row, col);
+                    int optionCount = (tempCell.IsPermint())?0: this.boardArg;
                     this.emptyCells += (optionCount > 0) ? 1 : 0;
-                    this.MinimumList[optionCount].Add((row, col));
+                    this.minimumList[optionCount].Add((row, col));
                 }
             }
 
         }
 
 
-        private bool is_sudoku_valid()
+        private bool IsSudokuValid()
         {
-            for (int row = 0; row < this.BoardArg; row++)
+            for (int row = 0; row < this.boardArg; row++)
             {
-                for (int col = 0; col < this.BoardArg; col++)
+                for (int col = 0; col < this.boardArg; col++)
                 {
-                    if(HasDuplicates(this.Relations.GetColumnRelations(row, col)) || HasDuplicates(this.Relations.GetRowRelations(row, col)) || HasDuplicates(this.Relations.GetBoxRelations(row, col)))
+                    if(HasDuplicates(this.relations.GetColumnRelations(row, col)) || HasDuplicates(this.relations.GetRowRelations(row, col)) || HasDuplicates(this.relations.GetBoxRelations(row, col)))
                     {
                         return false;
                     }
@@ -76,8 +76,8 @@ namespace SudokuSolver.SudokuSolver.StandardSudokuSolver
             HashSet<int> set = new HashSet<int>();
             foreach (var item in list)
             {
-                if (this.Board.Get_Cell_By_Index(item.Item1, item.Item2).Get_Current_Value() != IBoardCell.BOARD_CELL_EMPTY 
-                    && !set.Add(this.Board.Get_Cell_By_Index(item.Item1,item.Item2).Get_Current_Value()))
+                if (this.board.GetCellByIndex(item.Item1, item.Item2).GetCurrentValue() != IBoardCell.BOARD_CELL_EMPTY 
+                    && !set.Add(this.board.GetCellByIndex(item.Item1,item.Item2).GetCurrentValue()))
                 {
                     return true;
                 }
@@ -89,13 +89,13 @@ namespace SudokuSolver.SudokuSolver.StandardSudokuSolver
         /// Finds the coordinates of the cell with the minimum number of options.
         /// </summary>
         /// <returns>The coordinates of the cell with the minimum number of options.</returns>
-        private (int, int) Find_Minimum_Cell_Cords()
+        private (int, int) FindMinimumCellCords()
         {
-            foreach (var Option in MinimumList)
+            foreach (var option in minimumList)
             {
-                if (Option.Value.Count > 0)
+                if (option.Value.Count > 0)
                 {
-                    return Option.Value[0];
+                    return option.Value[0];
                 }
             }
             return (-1, -1);
@@ -113,15 +113,15 @@ namespace SudokuSolver.SudokuSolver.StandardSudokuSolver
             {
                 return true;
             }
-            (int,int) cords = Find_Minimum_Cell_Cords();
-            HashSet<(int, int)> neighbers = this.Relations.GetAllRelations(cords.Item1, cords.Item2);
-            IBoardCell minimumCell = this.Board.Get_Cell_By_Index(cords.Item1, cords.Item2);
+            (int,int) cords = FindMinimumCellCords();
+            HashSet<(int, int)> neighbers = this.relations.GetAllRelations(cords.Item1, cords.Item2);
+            IBoardCell minimumCell = this.board.GetCellByIndex(cords.Item1, cords.Item2);
             
-            if (minimumCell.Is_Permint())
+            if (minimumCell.IsPermint())
             {
                 this.statusSolver++;
-                UpdateCells(neighbers, minimumCell.Get_Current_Value());
-                this.MinimumList[0].Remove(cords);
+                UpdateCells(neighbers, minimumCell.GetCurrentValue());
+                this.minimumList[0].Remove(cords);
                 return Solve();
             }
             
@@ -129,48 +129,48 @@ namespace SudokuSolver.SudokuSolver.StandardSudokuSolver
             if(true && statusSolver >= 0)
             {
                 // optimal naked pattern
-                for (int i = 0; i < this.BoardArg; i++)
+                for (int i = 0; i < this.boardArg; i++)
                 {
-                    HashSet<(int, int)> collom = this.Relations.GetOnlyColumnRelations(i);
-                    HashSet<(int, int)> row = this.Relations.GetOnlyRowRelations(i);
-                    HashSet<(int, int)> box = this.Relations.GetOnlyBoxRelations(i);
-                    Dictionary<byte[], List<(int, int)>> collom_finds = Naked_Pattern_Finder(collom);
-                    Dictionary<byte[], List<(int, int)>> row_finds = Naked_Pattern_Finder(row);
-                    Dictionary<byte[], List<(int, int)>> box_finds = Naked_Pattern_Finder(box);
-                    Impliment_Naked(collom_finds, collom);
-                    Impliment_Naked(row_finds, row);
-                    Impliment_Naked(box_finds, box);
+                    HashSet<(int, int)> collom = this.relations.GetOnlyColumnRelations(i);
+                    HashSet<(int, int)> row = this.relations.GetOnlyRowRelations(i);
+                    HashSet<(int, int)> box = this.relations.GetOnlyBoxRelations(i);
+                    Dictionary<byte[], List<(int, int)>> collomFinds = NakedPatternFinder(collom);
+                    Dictionary<byte[], List<(int, int)>> rowFinds = NakedPatternFinder(row);
+                    Dictionary<byte[], List<(int, int)>> boxFinds = NakedPatternFinder(box);
+                    Impliment_Naked(collomFinds, collom);
+                    Impliment_Naked(rowFinds, row);
+                    Impliment_Naked(boxFinds, box);
                 }
                 //
                 statusSolver = -1;
             }
 
-            for (int option = 1; option <= this.BoardArg; option++)
+            for (int option = 1; option <= this.boardArg; option++)
             {
-                if (minimumCell.Is_Option_Exists(option))
+                if (minimumCell.IsOptionExists(option))
                 {
                     HashSet<(int, int)> updatedCells = UpdateCells(neighbers, option);
 
                     // naked patterns
-                    bool naked_flag = false;
-                    Dictionary<(int, int), byte[]> retrive_collom_table = null;
-                    Dictionary<(int, int), byte[]> retrive_row_table = null;
-                    Dictionary<(int, int), byte[]> retrive_box_table = null;
-                    if (true && statusSolver < -this.BoardArg)
+                    bool nakedFlag = false;
+                    Dictionary<(int, int), byte[]> retriveCollomTable = null;
+                    Dictionary<(int, int), byte[]> retriveRowTable = null;
+                    Dictionary<(int, int), byte[]> retriveBoxTable = null;
+                    if (true && statusSolver < -this.boardArg)
                     {
-                        naked_flag = true;
-                        HashSet<(int, int)> collom = this.Relations.GetColumnRelations(cords.Item1, cords.Item2);
-                        HashSet<(int, int)> row = this.Relations.GetRowRelations(cords.Item1, cords.Item2);
-                        HashSet<(int, int)> box = this.Relations.GetBoxRelations(cords.Item1, cords.Item2);
+                        nakedFlag = true;
+                        HashSet<(int, int)> collom = this.relations.GetColumnRelations(cords.Item1, cords.Item2);
+                        HashSet<(int, int)> row = this.relations.GetRowRelations(cords.Item1, cords.Item2);
+                        HashSet<(int, int)> box = this.relations.GetBoxRelations(cords.Item1, cords.Item2);
 
-                        Dictionary<byte[], List<(int, int)>> collom_finds = Naked_Pattern_Finder(collom);
-                        Dictionary<byte[], List<(int, int)>> row_finds = Naked_Pattern_Finder(row);
-                        Dictionary<byte[], List<(int, int)>> box_finds = Naked_Pattern_Finder(box);
+                        Dictionary<byte[], List<(int, int)>> collomFinds = NakedPatternFinder(collom);
+                        Dictionary<byte[], List<(int, int)>> rowFinds = NakedPatternFinder(row);
+                        Dictionary<byte[], List<(int, int)>> boxFinds = NakedPatternFinder(box);
 
 
-                        retrive_collom_table = Impliment_Naked(collom_finds, collom);
-                        retrive_row_table = Impliment_Naked(row_finds, row);
-                        retrive_box_table = Impliment_Naked(box_finds, box);
+                        retriveCollomTable = Impliment_Naked(collomFinds, collom);
+                        retriveRowTable = Impliment_Naked(rowFinds, row);
+                        retriveBoxTable = Impliment_Naked(boxFinds, box);
                         statusSolver = -1;
                     }
                     //
@@ -181,8 +181,8 @@ namespace SudokuSolver.SudokuSolver.StandardSudokuSolver
 
 
 
-                    this.MinimumList[minimumCell.Count_Options()].Remove(cords);
-                    minimumCell.Set_Current_Value(option);
+                    this.minimumList[minimumCell.CountOptions()].Remove(cords);
+                    minimumCell.SetCurrentValue(option);
                     this.emptyCells--;
                     bool statusCode = Solve();
                     if (statusCode)
@@ -193,20 +193,20 @@ namespace SudokuSolver.SudokuSolver.StandardSudokuSolver
                     {
                         
                         // naked patterns
-                        if (naked_flag)
+                        if (nakedFlag)
                         {
-                            Deimpliment_Naked(retrive_box_table);
-                            Deimpliment_Naked(retrive_row_table);
-                            Deimpliment_Naked(retrive_collom_table);
+                            Deimpliment_Naked(retriveBoxTable);
+                            Deimpliment_Naked(retriveRowTable);
+                            Deimpliment_Naked(retriveCollomTable);
                         }
                         //
                         RetriveCells(updatedCells, option);
                         this.emptyCells++;
-                        minimumCell.Set_Current_Value(IBoardCell.BOARD_CELL_EMPTY);
+                        minimumCell.SetCurrentValue(IBoardCell.BOARD_CELL_EMPTY);
                     }
                 }
             }
-            minimumCell.Set_Current_Value(IBoardCell.BOARD_CELL_EMPTY);
+            minimumCell.SetCurrentValue(IBoardCell.BOARD_CELL_EMPTY);
             this.statusSolver--;
             return false;
         }
@@ -214,16 +214,16 @@ namespace SudokuSolver.SudokuSolver.StandardSudokuSolver
 
         private void UpdateMinimumList((int,int) cell)
         {
-            IBoardCell cellToChagne = Board.Get_Cell_By_Index(cell.Item1, cell.Item2);
-            this.MinimumList[cellToChagne.Count_Options() + 1].Remove((cell.Item1, cell.Item2));
-            this.MinimumList[cellToChagne.Count_Options()].Add((cell.Item1, cell.Item2));
+            IBoardCell cellToChagne = board.GetCellByIndex(cell.Item1, cell.Item2);
+            this.minimumList[cellToChagne.CountOptions() + 1].Remove((cell.Item1, cell.Item2));
+            this.minimumList[cellToChagne.CountOptions()].Add((cell.Item1, cell.Item2));
         }
 
         private void RetriveMinimumList((int, int) cell)
         {
-            IBoardCell cellToChagne = Board.Get_Cell_By_Index(cell.Item1, cell.Item2);
-            this.MinimumList[cellToChagne.Count_Options() - 1].Remove((cell.Item1, cell.Item2));
-            this.MinimumList[cellToChagne.Count_Options()].Add((cell.Item1, cell.Item2));
+            IBoardCell cellToChagne = board.GetCellByIndex(cell.Item1, cell.Item2);
+            this.minimumList[cellToChagne.CountOptions() - 1].Remove((cell.Item1, cell.Item2));
+            this.minimumList[cellToChagne.CountOptions()].Add((cell.Item1, cell.Item2));
         }
 
         /// <summary>
@@ -232,15 +232,15 @@ namespace SudokuSolver.SudokuSolver.StandardSudokuSolver
         /// <param name="cellsToUpdate">The set of cell coordinates to update.</param>
         /// <param name="option">The option to remove from the cells.</param>
         /// <returns>A set containing the coordinates of updated cells.</returns>
-        private HashSet<(int, int)> UpdateCells(HashSet<(int, int)> cells_to_update, int option)
+        private HashSet<(int, int)> UpdateCells(HashSet<(int, int)> cellsToUpdate, int option)
         {
-            HashSet<(int, int)> updatedCells = new HashSet<(int, int)>(cells_to_update.Count);
-            foreach (var cell in cells_to_update)
+            HashSet<(int, int)> updatedCells = new HashSet<(int, int)>(cellsToUpdate.Count);
+            foreach (var cell in cellsToUpdate)
             {
-                IBoardCell cellToChagne = Board.Get_Cell_By_Index(cell.Item1, cell.Item2);
-                if (cellToChagne.Get_Current_Value() == IBoardCell.BOARD_CELL_EMPTY)
+                IBoardCell cellToChagne = board.GetCellByIndex(cell.Item1, cell.Item2);
+                if (cellToChagne.GetCurrentValue() == IBoardCell.BOARD_CELL_EMPTY)
                 {
-                    bool statusCode = cellToChagne.Remove_Option(option);
+                    bool statusCode = cellToChagne.RemoveOption(option);
                     if (statusCode)
                     {
                         updatedCells.Add(cell);
@@ -294,12 +294,12 @@ namespace SudokuSolver.SudokuSolver.StandardSudokuSolver
         /// </summary>
         /// <param name="cellsToUpdate">The set of cell coordinates to update.</param>
         /// <param name="option">The option to retrieve in the cells.</param>
-        private void RetriveCells(HashSet<(int, int)> cells_to_update, int option)
+        private void RetriveCells(HashSet<(int, int)> cellsToUpdate, int option)
         {
-            foreach (var cell in cells_to_update)
+            foreach (var cell in cellsToUpdate)
             {
-                IBoardCell cellToChagne = Board.Get_Cell_By_Index(cell.Item1, cell.Item2);
-                cellToChagne.Retrive_Option(option);
+                IBoardCell cellToChagne = board.GetCellByIndex(cell.Item1, cell.Item2);
+                cellToChagne.RetriveOption(option);
                 RetriveMinimumList(cell);
             }
         }
@@ -313,10 +313,10 @@ namespace SudokuSolver.SudokuSolver.StandardSudokuSolver
         {
             foreach (var keyValuePair in dict)
             {
-                IBoardCell cellToChagne = Board.Get_Cell_By_Index(keyValuePair.Key.Item1, keyValuePair.Key.Item2);
-                this.MinimumList[cellToChagne.Count_Options()].Remove((keyValuePair.Key.Item1, keyValuePair.Key.Item2));
-                cellToChagne.Set_Options(keyValuePair.Value);
-                this.MinimumList[cellToChagne.Count_Options()].Add((keyValuePair.Key.Item1, keyValuePair.Key.Item2));
+                IBoardCell cellToChagne = board.GetCellByIndex(keyValuePair.Key.Item1, keyValuePair.Key.Item2);
+                this.minimumList[cellToChagne.CountOptions()].Remove((keyValuePair.Key.Item1, keyValuePair.Key.Item2));
+                cellToChagne.SetOptions(keyValuePair.Value);
+                this.minimumList[cellToChagne.CountOptions()].Add((keyValuePair.Key.Item1, keyValuePair.Key.Item2));
             }
         }
 
@@ -328,17 +328,17 @@ namespace SudokuSolver.SudokuSolver.StandardSudokuSolver
             Dictionary<(int, int), byte[]> retunal = new Dictionary<(int, int), byte[]>();
             foreach (var keyValuePair in dict)
             {
-                if(keyValuePair.Value.Count > 1 && keyValuePair.Value.Count < this.BoardArg)
+                if(keyValuePair.Value.Count > 1 && keyValuePair.Value.Count < this.boardArg)
                 {
                     List<(int,int)> list = new List<(int, int)>(cells);
                     list.RemoveAll(element => keyValuePair.Value.Contains(element));
                     foreach (var item in list)
                     {
-                        IBoardCell cellToChagne = Board.Get_Cell_By_Index(item.Item1, item.Item2);
-                        retunal.Add(item, cellToChagne.Get_Options());
-                        this.MinimumList[cellToChagne.Count_Options()].Remove((item.Item1, item.Item2));
-                        cellToChagne.Remove_Options(keyValuePair.Key);
-                        this.MinimumList[cellToChagne.Count_Options()].Add((item.Item1, item.Item2));
+                        IBoardCell cellToChagne = board.GetCellByIndex(item.Item1, item.Item2);
+                        retunal.Add(item, cellToChagne.GetOptions());
+                        this.minimumList[cellToChagne.CountOptions()].Remove((item.Item1, item.Item2));
+                        cellToChagne.RemoveOptions(keyValuePair.Key);
+                        this.minimumList[cellToChagne.CountOptions()].Add((item.Item1, item.Item2));
                     }
                     break;
                 }
@@ -347,7 +347,7 @@ namespace SudokuSolver.SudokuSolver.StandardSudokuSolver
         }
 
 
-        private Dictionary<byte[], List<(int, int)>> Naked_Pattern_Finder(HashSet<(int, int)> cells)
+        private Dictionary<byte[], List<(int, int)>> NakedPatternFinder(HashSet<(int, int)> cells)
         {
             Dictionary<byte[], List<(int, int)>> optionDict = new Dictionary<byte[], List<(int, int)>>();
             
@@ -365,10 +365,10 @@ namespace SudokuSolver.SudokuSolver.StandardSudokuSolver
         private void AddToDictionary(ref Dictionary<byte[], List<(int, int)>> optionDict, (int, int) cords)
         {
             
-            if (this.Board.Get_Cell_By_Index(cords.Item1, cords.Item2).Get_Current_Value() == IBoardCell.BOARD_CELL_EMPTY)
+            if (this.board.GetCellByIndex(cords.Item1, cords.Item2).GetCurrentValue() == IBoardCell.BOARD_CELL_EMPTY)
             {
                 // Get the options of the Sudoku cell at the specified coordinates
-                byte[] options = this.Board.Get_Cell_By_Index(cords.Item1, cords.Item2).Get_Options();
+                byte[] options = this.board.GetCellByIndex(cords.Item1, cords.Item2).GetOptions();
                 // Check if the dictionary already contains an entry with the same options
                 if (!optionDict.ContainsKey(options))
                 {
@@ -394,26 +394,26 @@ namespace SudokuSolver.SudokuSolver.StandardSudokuSolver
         {
             StringBuilder sb = new StringBuilder();
 
-            for (int i = 0; i < this.BoardArg; i++)
+            for (int i = 0; i < this.boardArg; i++)
             {
                 // Add horizontal line after every third row
-                if (i > 0 && i % Math.Sqrt(this.BoardArg) == 0)
+                if (i > 0 && i % Math.Sqrt(this.boardArg) == 0)
                 {
-                    sb.AppendLine(new string('-', (int)(this.BoardArg * 4 + Math.Sqrt(this.BoardArg) - 1)));
+                    sb.AppendLine(new string('-', (int)(this.boardArg * 4 + Math.Sqrt(this.boardArg) - 1)));
                 }
 
-                for (int j = 0; j < this.BoardArg; j++)
+                for (int j = 0; j < this.boardArg; j++)
                 {
                     // Add vertical line after every third column
-                    if (j > 0 && j % Math.Sqrt(this.BoardArg) == 0)
+                    if (j > 0 && j % Math.Sqrt(this.boardArg) == 0)
                     {
                         sb.Append("| ");
                     }
 
-                    sb.Append((char)((char)this.Board.Get_Cell_By_Index(i, j).Get_Current_Value()+'0'));
+                    sb.Append((char)((char)this.board.GetCellByIndex(i, j).GetCurrentValue()+'0'));
 
                     // Add newline after every row
-                    if (j == this.BoardArg - 1)
+                    if (j == this.boardArg - 1)
                     {
                         sb.AppendLine();
                     }
