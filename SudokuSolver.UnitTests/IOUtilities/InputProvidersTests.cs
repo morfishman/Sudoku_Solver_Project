@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
+using SudokuSolver.IOUtilities.Input;
 
 namespace SudokuSolver.UnitTests.IOUtilities
 {

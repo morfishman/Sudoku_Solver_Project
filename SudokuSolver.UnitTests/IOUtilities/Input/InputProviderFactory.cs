@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SudokuSolver.UnitTests.IOUtilities
+namespace SudokuSolver.IOUtilities.Input
 {
     public static class InputProviderFactory
     {
@@ -21,7 +21,7 @@ namespace SudokuSolver.UnitTests.IOUtilities
                     {
                         return (IInputProvider<T>)(new ConsoleInputProvider());
                     }
-                    break; // Add break statement here
+                    break; 
 
                 case InputProviderType.TextFile:
                     if (string.IsNullOrEmpty(filePath))
@@ -32,7 +32,7 @@ namespace SudokuSolver.UnitTests.IOUtilities
                     {
                         return (IInputProvider<T>)(new TextFileProvider(filePath));
                     }
-                    break; // Add break statement here
+                    break; 
                 default:
                     throw new ArgumentException("Invalid input provider type.");
             }

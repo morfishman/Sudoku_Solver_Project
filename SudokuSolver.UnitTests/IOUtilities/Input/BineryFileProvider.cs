@@ -1,11 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
 
-namespace SudokuSolver.UnitTests.IOUtilities
+namespace SudokuSolver.IOUtilities.Input
 {
-    public class BineryFileProvider : IInputProvider<byte[]>
+    public class BineryFileProvider: IInputProvider<byte[]>
     {
         private string filePath;
         private bool isSet;

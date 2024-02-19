@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SudokuSolver.UnitTests.IOUtilities
+namespace SudokuSolver.IOUtilities.Input
 {
     public interface IInputProvider<inputType>
     {
