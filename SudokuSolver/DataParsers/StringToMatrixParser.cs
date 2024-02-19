@@ -22,26 +22,26 @@ namespace SudokuSolver.DataParsers
         /// <exception cref="ArgumentException">Thrown when the input data length does not form a perfect square, or when an invalid number is found in the board.</exception>
         public List<List<IBoardCell>> ParseData()
         {
-            double lengthTest = Math.Sqrt((double)dataToParse.Length);
-            if(lengthTest%1 != 0)
+            double length_test = Math.Sqrt((double)dataToParse.Length);
+            if(length_test%1 != 0)
             {
                 throw new ArgumentException("not valid board");
             }
-            int sudokuSize = (int)lengthTest;
-            List<List<IBoardCell>> boardCells = new List<List<IBoardCell>>(sudokuSize);
+            int sudoku_size = (int)length_test;
+            List<List<IBoardCell>> boardCells = new List<List<IBoardCell>>(sudoku_size);
             int iterator = 0;
-            for (int i = 0; i < sudokuSize; i++)
+            for (int i = 0; i < sudoku_size; i++)
             {
-                boardCells[i] = new List<IBoardCell>(sudokuSize);
-                for (int j = 0; j < sudokuSize; j++)
+                boardCells.Add(new List<IBoardCell>(sudoku_size));
+                for (int j = 0; j < sudoku_size; j++)
                 {
-                    int number = dataToParse[iterator] - '0';
-                    if(number > sudokuSize)
+                    int number = dataToParse[iterator++] - '0';
+                    if(number > sudoku_size)
                     {
                         throw new ArgumentException(String.Format("not valid number in board {0}", number));
                     }
                     bool permint = (number != IBoardCell.BOARD_CELL_EMPTY) ? true : false;
-                    boardCells[i][j] = new BitwiseBoardCell(number, permint, sudokuSize);
+                    boardCells[i].Add(new BitwiseBoardCell(number, permint, sudoku_size));
                 }
             }
             return boardCells;
