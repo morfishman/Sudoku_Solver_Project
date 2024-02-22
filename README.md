@@ -63,8 +63,7 @@ The naked pattern strategy is an extension of the naked pairs strategy, where in
 
 ## Usage
 
-Upon launching the application, users can choose to solve a Sudoku puzzle by selecting the appropriate option from the menu. They will be prompted to input the Sudoku puzzle board, and the application will then attempt to solve it using constraint propagation and naked patterns strategies.
-Certainly! Here's how you can format the stylized representation in a README.md file:
+Upon launching the application, users can choose to solve a Sudoku puzzle by selecting the appropriate option from the menu. They will be prompted to input the Sudoku puzzle board, and the application will then attempt to solve it using constraint propagation and naked patterns strategies:
 
 ```markdown
 # Sudoku Solver
